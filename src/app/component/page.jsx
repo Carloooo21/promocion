@@ -328,6 +328,7 @@ export default function RegisterForm() {
                             hover:shadow-[0_6px_20px_rgba(4,4,226,0.4)]
             "
           type="submit"
+          onClick={handleSubmitWithValidation }
           disabled={loading} // Deshabilitar durante el envío
         >
           {loading ? 'Enviando...': '¡Canjéalo Ahora!'}
