@@ -17,7 +17,7 @@ export default function useRegister() {
   })
 
   const [mensaje, setMensaje] = useState("");
-  const [mostrarCard, setMostratCard] = useState("")
+  const [mostrarCard, setMostrarCard] = useState("")
   const [loading, setLoading] = useState("")
   const [codigoDescuento, setCodigoDescuento] = useState("");
   const [expiracionCodigo, setExpiracionCodigo] = useState("")
@@ -76,7 +76,7 @@ export default function useRegister() {
 
       const res = await fetch(`${baseUrl}/api/usuario/public/registro`, {
         method: "POST",
-        headers: { "Content-Type": "aplication/json" },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
         credentials: 'include',
         signal: controller.signal
@@ -123,10 +123,12 @@ export default function useRegister() {
     handleChange,
     mensaje,
     mostrarCard,
-    setMostratCard,
+    setMostrarCard,
     loading,
     handleSubmit,
-    resetForm
+    resetForm,
+    codigoDescuento,
+    expiracionCodigo
 
   };
 }

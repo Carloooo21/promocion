@@ -13,6 +13,8 @@ export default function RegisterForm() {
   const {
     formData,
     handleChange,
+    codigoDescuento,
+    expiracionCodigo,
     loading,
     mensaje,
     mostrarCard,
@@ -359,7 +361,7 @@ export default function RegisterForm() {
 
             {/* Porcentaje */}
             <div className="my-2 text-center">
-              <span className="text-6xl font-extrabold tracking-tight text-[#ffffff] drop-shadow-lg">100%</span>
+              <span className="text-6xl font-extrabold tracking-tight text-[#ffffff] drop-shadow-lg">50%</span>
               <p className="text-xl font-semibold mt-1 text-gray-200">Descuento aplicado</p>
             </div>
 
@@ -378,8 +380,9 @@ export default function RegisterForm() {
             <div className="flex justify-between items-center w-full mt-6">
               <button
                 className="px-5 py-2 bg-[#FF2301] text-white font-semibold rounded-lg hover:bg-[#ff8243] transition duration-200 w-[135px] h-[50px]"
-                onClick={setTexto} // cuando el usuario hace clic, cambia el texto del precio
+                onClick={() => setTexto('425.000$')}  // Fix this
               >
+            
                 Canjear
               </button>
               <div className="text-center">
