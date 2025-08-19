@@ -1,14 +1,62 @@
 "use client";
 import useRegister from "../lib/useRegister";
-import React, { useMemo, useState } from "react";
+import React, { useMemo, useState, useEffect } from "react";
 
+// Componente Toast para mostrar alertas
+const Toast = ({
+  message = 'Haz reclamado tu código de descuento, nuestros asesores se comunicarán pronto contigo',
+  type = 'success',
+  onClose,
+  duration = 5000
+}) => {
+  useEffect(() => {
+    if (duration) {
+      const timer = setTimeout(() => {
+        onClose();
+      }, duration);
+      return () => clearTimeout(timer);
+    }
+  }, [duration, onClose]);
+
+  const bgColor = type === 'success'
+    ? 'bg-green-500'
+    : type === 'error'
+      ? 'bg-red-500'
+      : 'bg-blue-500';
+
+  return (
+    <div className={`fixed top-4 right-4 z-50 p-4 rounded-lg shadow-lg text-white ${bgColor} animate-fadeIn`}>
+      <div className="flex items-center justify-between">
+        <span>{message}</span>
+        <button
+          onClick={onClose}
+          className="ml-4 text-white hover:text-gray-200"
+        >
+          ✕
+        </button>
+      </div>
+    </div>
+  );
+};
 
 export default function RegisterForm() {
-  const [texto, setTexto] = useState('$850.000')
-  const cambiarTexto = () => {
-    setTexto('425.000$')
+  const [texto, setTexto] = useState('$510.000');
+  const [showToast, setShowToast] = useState(false);
+  const [toastMessage, setToastMessage] = useState('');
+  const [toastType, setToastType] = useState('success');
 
-  }
+  // Función para mostrar alertas
+  const showAlert = (message = '', type = 'success') => {
+    setToastMessage(message);
+    setToastType(type);
+    setShowToast(true);
+  };
+
+  const cambiarTexto = () => {
+    setTexto('0$');
+    showAlert(); // Muestra el mensaje por defecto
+  };
+
   const {
     formData,
     handleChange,
@@ -22,6 +70,7 @@ export default function RegisterForm() {
     handleSubmit
   } = useRegister("");
 
+
   // Estado para errores específicos por campo
   const [fieldErrors, setFieldErrors] = useState({
     nombreUsuario: "",
@@ -31,7 +80,28 @@ export default function RegisterForm() {
     correoUsuario: "",
     lugarUsuario: "",
     nombreEmpresa: ""
-  })
+  });
+
+  // Función para limpiar el formulario
+  const handleClearForm = () => {
+    resetForm();
+    setFieldErrors({
+      nombreUsuario: "",
+      numeroTelefono: "",
+      sectorIndustrial: "",
+      cargoUsuario: "",
+      correoUsuario: "",
+      lugarUsuario: "",
+      nombreEmpresa: ""
+    });
+    showAlert('Formulario limpiado correctamente', 'success');
+  };
+
+  // Función para cerrar la tarjeta y limpiar el formulario
+  const handleCloseCard = () => {
+    setMostrarCard(false);
+    handleClearForm(); // Limpia el formulario al cerrar la tarjeta
+  };
 
   const validateField = (field, value) => {
     let error = '';
@@ -74,37 +144,42 @@ export default function RegisterForm() {
 
     setFieldErrors(prev => ({ ...prev, [field]: error }));
     return error === '';
-  }
+  };
 
-  //handler para cambio y validacion
+  // Handler para cambio y validacion
   const handleFielfChange = (field, value) => {
     handleChange(field, value);
     validateField(field, value);
   };
-  // Validar todo el formulario antes de enviar
 
+  // Validar todo el formulario antes de enviar
   const validateForm = () => {
     let isValid = true;
-    // Itera sobre todos los campos que necesitan validación
     for (const field in formData) {
       if (!validateField(field, formData[field])) {
         isValid = false;
       }
     }
-
     return isValid;
-  }
-  //Handler de envio con validacion completa
+  };
+
+  // Handler de envio con validacion completa
   const handleSubmitWithValidation = async (e) => {
     e.preventDefault();
 
-    if (!validateForm) {
-      return
+    if (!validateForm()) {
+      showAlert('Por favor, corrige los errores en el formulario', 'error');
+      return;
     }
-    //Si pasa validacion, proceder con el envio
-    await handleSubmit(e);
-  }
-  //Estilos
+
+    try {
+      await handleSubmit(e);
+      showAlert(); // Muestra el mensaje por defecto
+    } catch (error) {
+      showAlert('Error al enviar el formulario', 'error');
+    }
+  };
+
   const inputStyle = useMemo(() => ({
     width: '100%',
     padding: '10px 12px',
@@ -117,7 +192,7 @@ export default function RegisterForm() {
     boxShadow: 'none',
     transition: 'all 0.2s ease',
     appearance: 'none'
-  }), [])
+  }), []);
 
   const errorStyle = {
     color: '#ff6b6b',
@@ -131,12 +206,10 @@ export default function RegisterForm() {
     fontWeight: 500,
     color: 'white',
     position: 'relative'
-  }
+  };
 
   return (
-
     <>
-
       <div className="
             maxWidth: 1000px,
             width: '100%',
@@ -302,43 +375,76 @@ export default function RegisterForm() {
         </form>
 
       </div>
-      {/* Contenedor para el botón */}
-      <div className="flex flex-col justify-center items-center md:mt-[2vh]">
+
+      {/* Contenedor para los botones */}
+      <div className="flex flex-col md:flex-row gap-4 justify-center items-center md:mt-[2vh]">
+        {/* Botón de enviar */}
         <button
           className="
-                            w-full
-                            max-w-[400px]
-                            md:w-[1000px]
-                            mt-[3vh]
-                            p-[15px]
-                            bg-[#FF2301]
-                            text-white
-                            items-center
-
-                            border-none
-                            rounded-lg
-                            text-[20px]
-                            font-semibold
-                            cursor-pointer
-                            shadow-[0_4px_15px_rgba(4,4,226,0.3)]
-                            transition-all
-                            duration-300
-                            ease-in-out
-                            hover:bg-[#ff8243]
-                            hover:shadow-[0_6px_20px_rgba(4,4,226,0.4)]
-            "
+            w-full
+            max-w-[400px]
+            md:w-[400px]
+            mt-[3vh]
+            p-[15px]
+            bg-[#FF2301]
+            text-white
+            items-center
+            border-none
+            rounded-lg
+            text-[20px]
+            font-semibold
+            cursor-pointer
+            shadow-[0_4px_15px_rgba(4,4,226,0.3)]
+            transition-all
+            duration-300
+            ease-in-out
+            hover:bg-[#ff8243]
+            hover:shadow-[0_6px_20px_rgba(4,4,226,0.4)]
+            disabled:opacity-50
+            disabled:cursor-not-allowed
+          "
           type="submit"
-          onClick={handleSubmitWithValidation }
-          disabled={loading} // Deshabilitar durante el envío
+          onClick={handleSubmitWithValidation}
+          disabled={loading}
         >
-          {loading ? 'Enviando...': '¡Canjéalo Ahora!'}
+          {loading ? 'Enviando...' : '¡Canjéalo Ahora!'}
+        </button>
+
+        {/* Botón para limpiar formulario */}
+        <button
+          className="
+            w-full
+            max-w-[400px]
+            md:w-[400px]
+            mt-[3vh]
+            p-[15px]
+            bg-gray-500
+            text-white
+            items-center
+            border-none
+            rounded-lg
+            text-[20px]
+            font-semibold
+            cursor-pointer
+            shadow-[0_4px_15px_rgba(0,0,0,0.3)]
+            transition-all
+            duration-300
+            ease-in-out
+            hover:bg-gray-600
+            hover:shadow-[0_6px_20px_rgba(0,0,0,0.4)]
+          "
+          type="button"
+          onClick={handleClearForm}
+        >
+          Limpiar Formulario
         </button>
       </div>
 
+      {/* Tarjeta de voucher */}
       {mostrarCard && (
         <div
           className="fixed inset-0 z-[100] flex items-center justify-center backdrop-blur-sm bg-black/60"
-          onClick={() => setMostrarCard(false)} // cierra al hacer clic fuera
+          onClick={handleCloseCard} // Cierra la tarjeta y limpia el formulario
         >
           <div
             className="relative bg-gradient-to-br from-[#0a7bd4] to-[#092a49] text-white rounded-2xl shadow-2xl p-8 w-[420px] max-w-[90vw] max-h-[90vh] flex flex-col items-center"
@@ -346,7 +452,7 @@ export default function RegisterForm() {
           >
             {/* Botón de cierre */}
             <button
-              onClick={() => setLocalMostrarCard(false)}
+              onClick={handleCloseCard}
               className="absolute top-4 right-4 text-gray-300 hover:text-white transition duration-200"
               aria-label="Cerrar"
             >
@@ -380,9 +486,8 @@ export default function RegisterForm() {
             <div className="flex justify-between items-center w-full mt-6">
               <button
                 className="px-5 py-2 bg-[#FF2301] text-white font-semibold rounded-lg hover:bg-[#ff8243] transition duration-200 w-[135px] h-[50px]"
-                onClick={() => setTexto('425.000$')}  // Fix this
+                onClick={cambiarTexto}
               >
-
                 Canjear
               </button>
               <div className="text-center">
@@ -399,10 +504,14 @@ export default function RegisterForm() {
         </div>
       )}
 
+      {/* Toast para alertas */}
+      {showToast && (
+        <Toast
+          message={toastMessage}
+          type={toastType}
+          onClose={() => setShowToast(false)}
+        />
+      )}
     </>
-  )
-
-
-
-
+  );
 }
