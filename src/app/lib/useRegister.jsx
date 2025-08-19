@@ -3,7 +3,7 @@ import { use, useCallback, useState } from 'react'
 
 export default function useRegister() {
   //  Cada campo de la entidad Spring necesita su propio estado:
-
+  // Gestión centralizada del estado del formulario
   const [formData, setFormData] = useState({
     nombreUsuario: "",
     numeroTelefono: "",
@@ -19,6 +19,7 @@ export default function useRegister() {
   const [mensaje, setMensaje] = useState("");
   const [mostrarCard, setMostrarCard] = useState("")
   const [loading, setLoading] = useState("")
+  // Estados para la respuesta del servidor
   const [codigoDescuento, setCodigoDescuento] = useState("");
   const [expiracionCodigo, setExpiracionCodigo] = useState("")
 
@@ -52,6 +53,7 @@ export default function useRegister() {
 
     setLoading(true);
     setMensaje("");
+    // Prepara los datos (elimina espacios en blanco)
 
     const payload = {
       ...formData,
@@ -73,6 +75,7 @@ export default function useRegister() {
       //Qué hace: Cancela la petición si demora más de 10 segundos.
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 10000)
+      // Envía al backend
 
       const res = await fetch(`${baseUrl}/api/usuario/public/registro`, {
         method: "POST",
@@ -94,9 +97,11 @@ export default function useRegister() {
 
       const now = Date.now().toString();
       // Guardar código y expiración
+      // Procesa la respuesta
+
       setCodigoDescuento(data.codigoDescuento ?? "");
       setExpiracionCodigo(data.expiracionCodigo ?? "");
-      setMostrarCard(true);
+      setMostrarCard(true);// ¡Muestra el modal con el código!
 
       //Guarda codigo de descuento
       // Correcto: Pasar dos argumentos (clave, valor)
@@ -106,7 +111,7 @@ export default function useRegister() {
         new Date(data.expiracionCodigo).toISOString()
 
       );
-      setMostratCard(true);
+      setMostrarCard(true);
       setMensaje('Registro exitoso, patron')
     } catch (error) {
       console.error("Error registrando usuario: ", error);

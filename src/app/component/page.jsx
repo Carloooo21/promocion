@@ -4,7 +4,6 @@ import React, { useMemo, useState } from "react";
 
 
 export default function RegisterForm() {
-  const [localMostrarCard, setLocalMostrarCard] = useState(false);
   const [texto, setTexto] = useState('$850.000')
   const cambiarTexto = () => {
     setTexto('425.000$')
@@ -19,8 +18,10 @@ export default function RegisterForm() {
     mensaje,
     mostrarCard,
     setMostrarCard,
-    resetForm
+    resetForm,
+    handleSubmit
   } = useRegister("");
+
   // Estado para errores específicos por campo
   const [fieldErrors, setFieldErrors] = useState({
     nombreUsuario: "",
@@ -29,9 +30,7 @@ export default function RegisterForm() {
     cargoUsuario: "",
     correoUsuario: "",
     lugarUsuario: "",
-    nombreEmpresa: "",
-    codigoDescuento: "",
-    expiracionDescuento: ""
+    nombreEmpresa: ""
   })
 
   const validateField = (field, value) => {
@@ -83,16 +82,16 @@ export default function RegisterForm() {
     validateField(field, value);
   };
   // Validar todo el formulario antes de enviar
+
   const validateForm = () => {
-    let isValid = () => {
-      const newErrors = { ...fieldErrors };
-    }
+    let isValid = true;
+    // Itera sobre todos los campos que necesitan validación
     for (const field in formData) {
-      if (!validateField(field, formData(field))) {
+      if (!validateField(field, formData[field])) {
         isValid = false;
       }
-
     }
+
     return isValid;
   }
   //Handler de envio con validacion completa
@@ -103,7 +102,7 @@ export default function RegisterForm() {
       return
     }
     //Si pasa validacion, proceder con el envio
-    await handleSubmitWithValidation(e);
+    await handleSubmit(e);
   }
   //Estilos
   const inputStyle = useMemo(() => ({
@@ -328,17 +327,17 @@ export default function RegisterForm() {
                             hover:bg-[#ff8243]
                             hover:shadow-[0_6px_20px_rgba(4,4,226,0.4)]
             "
-          type="button"
-          onClick={() => setLocalMostrarCard(true)} // Abre el modal
+          type="submit"
+          disabled={loading} // Deshabilitar durante el envío
         >
-          ¡Canjéalo Ahora!
+          {loading ? 'Enviando...': '¡Canjéalo Ahora!'}
         </button>
       </div>
 
-      {localMostrarCard && (
+      {mostrarCard && (
         <div
           className="fixed inset-0 z-[100] flex items-center justify-center backdrop-blur-sm bg-black/60"
-          onClick={() => setLocalMostrarCard(false)} // cierra al hacer clic fuera
+          onClick={() => setMostrarCard(false)} // cierra al hacer clic fuera
         >
           <div
             className="relative bg-gradient-to-br from-[#0a7bd4] to-[#092a49] text-white rounded-2xl shadow-2xl p-8 w-[420px] max-w-[90vw] max-h-[90vh] flex flex-col items-center"
@@ -382,7 +381,7 @@ export default function RegisterForm() {
                 className="px-5 py-2 bg-[#FF2301] text-white font-semibold rounded-lg hover:bg-[#ff8243] transition duration-200 w-[135px] h-[50px]"
                 onClick={() => setTexto('425.000$')}  // Fix this
               >
-            
+
                 Canjear
               </button>
               <div className="text-center">
