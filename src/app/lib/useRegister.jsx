@@ -46,7 +46,8 @@ export default function useRegister() {
   }, []);
 
   const handleSubmit = useCallback(async (e) => {
-    e.prevenDefault();
+    e.preventDefault();
+
     if (loading) return;
 
     setLoading(true);
