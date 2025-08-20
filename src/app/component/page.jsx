@@ -389,7 +389,7 @@ export default function RegisterForm() {
                   ...inputStyle,
                   borderColor: fieldErrors.lugarUsuario ? '#ff6b6b' : 'rgba(255,255,255,0.15)'
                 }}
-                placeholder="Ej: Bogota, Cundinamarca"
+                placeholder="Ej: Bogotá, Cundinamarca"
                 aria-label="lugar de asentamiento" />
               {fieldErrors.lugarUsuario && (
                 <p style={errorStyle}>{fieldErrors.lugarUsuario}</p>
