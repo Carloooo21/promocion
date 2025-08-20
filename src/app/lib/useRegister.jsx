@@ -87,11 +87,19 @@ export default function useRegister() {
       clearTimeout(timeoutId)
 
       if (!res.ok) {
-        const errorData = await res.json();
-        throw new Error(errorData.message || `Error ${res.status}`);
-
+        // lee json si viene, si no, lanza un mensaje por status
+        let errorMsg = `Error ${res.status}`;
+        try {
+          const errJson = await res.json();
+          if (errJson && (errJson.message || errJson.error)) {
+            errorMsg = errJson.message || errJson.error;
+          }
+        } catch (readErr) {
+          // ignora parse error
+        }
+        const err = new Error(errorMsg);
+        throw err;
       }
-
 
       const data = await res.json();
 
@@ -111,8 +119,7 @@ export default function useRegister() {
         new Date(data.expiracionCodigo).toISOString()
 
       );
-      setMostrarCard(true);
-      setMensaje('Registro exitoso, patron')
+      setMensaje('Registro exitoso, patron');
     } catch (error) {
       console.error("Error registrando usuario: ", error);
       setMensaje(error.name === "AbortError")

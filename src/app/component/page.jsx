@@ -204,10 +204,16 @@ export default function RegisterForm() {
     }
 
     try {
-      await handleSubmit(e);
-      showAlert(); // Muestra el mensaje por defecto
+      await handleSubmit(e); // ahora handleSubmit puede lanzar
+      showAlert('Registro exitoso. Revisa tu voucher.', 'success');
     } catch (error) {
-      showAlert('Error al enviar el formulario', 'error');
+      // Si fue un Abort (timeout) mostramos el mensaje específico que pediste:
+      if (error && error.name === 'AbortError') {
+        showAlert('Porfavor, intenta de nuevo, no pierdas el descuento, nuestros servidores fallan', 'error');
+      } else {
+        // Mensaje genérico para otros errores
+        showAlert(error?.message || 'Error al enviar el formulario', 'error');
+      }
     }
   };
 
@@ -274,7 +280,7 @@ export default function RegisterForm() {
                   ...inputStyle,
                   borderColor: fieldErrors.nombreEmpresa ? '#ff6b6b' : 'rgba(255,255,255,0.15)'
                 }}
-                placeholder="Ej. Galileo Galilei."
+                placeholder="Ej: Galileo Galilei."
                 aria-label="Nombre del usuario" />
               {fieldErrors.nombreUsuario && (
                 <p style={errorStyle}>{fieldErrors.nombreUsuario}</p>
@@ -285,7 +291,7 @@ export default function RegisterForm() {
               className="md:col-span-2">
               <label style={labelStyle}>Numero de Telefono
                 <span className="text-red-500 ml-1">*</span>
-                <span className="text-xs text-white-400 block mt-1">Ej: 3057095134</span>
+                <span className="text-xs text-white-400 block mt-1">Ej: 0101010101</span>
               </label>
               <input
                 value={formData.numeroTelefono}
@@ -295,7 +301,7 @@ export default function RegisterForm() {
                 style={{
                   ...inputStyle,
                   borderColor: fieldErrors.numeroTelefono ? '#ff6b6b' : 'rgba(255,255,255,0.15)'
-                }} placeholder="Ej. 3057095134."
+                }} placeholder="Ej: 0101010101."
                 aria-label="Numero de telefono"
               />
               {fieldErrors.numeroTelefono && (
@@ -304,9 +310,9 @@ export default function RegisterForm() {
             </div>
             <div style={{ marginBottom: '10px' }}
               className="md:col-span-2">
-              <label style={labelStyle}>Sector industrial
+              <label style={labelStyle}>Sector industria
                 <span className="text-red-500 ml-1">*</span>
-                <span className="text-xs text-white-400 block mt-1">Ej: Software.</span>
+                <span className="text-xs text-white-400 block mt-1">Ej: Sector agricola, Sector tecnologico, Sector banca etc...</span>
               </label>
               <input
                 value={formData.sectorIndustrial}
@@ -317,7 +323,7 @@ export default function RegisterForm() {
                   ...inputStyle,
                   borderColor: fieldErrors.sectorIndustrial ? '#ff6b6b' : 'rgba(255,255,255,0.15)'
                 }}
-                placeholder="Ej. Software"
+                placeholder="Ej: Sector agricola, Sector tecnologico, Sector banca etc..."
                 aria-label="Sector industrial"
 
               />
@@ -340,7 +346,7 @@ export default function RegisterForm() {
                   ...inputStyle,
                   borderColor: fieldErrors.cargoUsuario ? '#ff6b6b' : 'rgba(255,255,255,0.15)'
                 }}
-                placeholder="Ej. Desarrolador de software"
+                placeholder="Ej: Desarrolador de software"
                 aria-label="Cargo de usuario" />
               {fieldErrors.cargoUsuario && (
                 <p style={errorStyle}>{fieldErrors.cargoUsuario}</p>
@@ -361,7 +367,7 @@ export default function RegisterForm() {
                   ...inputStyle,
                   borderColor: fieldErrors.correoUsuario ? '#ff6b6b' : 'rgba(255,255,255,0.15)'
                 }}
-                placeholder="Ej. astronomo@gmail.com"
+                placeholder="Ej: astronomo@gmail.com"
                 aria-label="Correo del usuario" />
               {fieldErrors.correoUsuario && (
                 <p style={errorStyle}>{fieldErrors.correoUsuario}</p>
@@ -371,7 +377,7 @@ export default function RegisterForm() {
               className="md:col-span-2">
               <label style={labelStyle}>Lugar de vivienda
                 <span className="text-red-500 ml-1">*</span>
-                <span className="text-xs text-white-400 block mt-1">Ej: Funza, cundinamarca</span>
+                <span className="text-xs text-white-400 block mt-1">Ej: Bogota, cundinamarca</span>
               </label>
               <input
                 value={formData.lugarUsuario}
@@ -382,7 +388,7 @@ export default function RegisterForm() {
                   ...inputStyle,
                   borderColor: fieldErrors.lugarUsuario ? '#ff6b6b' : 'rgba(255,255,255,0.15)'
                 }}
-                placeholder="Ej. Funza, Cundinamarca"
+                placeholder="Ej: Bogota, Cundinamarca"
                 aria-label="lugar de asentamiento" />
               {fieldErrors.lugarUsuario && (
                 <p style={errorStyle}>{fieldErrors.lugarUsuario}</p>
@@ -392,7 +398,7 @@ export default function RegisterForm() {
               className="md:col-span-2">
               <label style={labelStyle}>Nombre empresa
                 <span className="text-red-500 ml-1">*</span>
-                <span className="text-xs text-white-400 block mt-1">Ej: DATASERVICIOS Y COMUNICACIONES S.A.S.</span>
+                <span className="text-xs text-white-400 block mt-1">Ej: Dataservicios y comunicaciones S.A.S.</span>
               </label>
               <input
                 value={formData.nombreEmpresa}
@@ -403,7 +409,7 @@ export default function RegisterForm() {
                   ...inputStyle,
                   borderColor: fieldErrors.nombreEmpresa ? '#ff6b6b' : 'rgba(255,255,255,0.15)'
                 }}
-                placeholder="Ej.  DATASERVICIOS Y COMUNICACIONES S.A.S."
+                placeholder="Ej  Dataservicios y comunicaciones S.A.S."
                 aria-label="lugar de empresa" />
               {fieldErrors.nombreEmpresa && (
                 <p style={errorStyle}>{fieldErrors.nombreEmpresa}</p>
