@@ -62,7 +62,7 @@ export default function RegisterForm() {
     //if (redeemed) return; evita race conditions y múltiples showAlert por múltiples clicks rápidos.
     if (redeemed) return;
     setRedeemed(true);
-    setTexto('0$');
+    setTexto('425.000$');
     showAlert('¡Voucher canjeado! Nuestros asesores se comunicarán contigo.', 'success');
     // Animación breve del precio : clase que dura 700ms
     setAnimatePrice(true);
