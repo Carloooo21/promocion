@@ -71,38 +71,41 @@ export default function Home() {
                 </div>
 
                 {/* TÍTULO */}
-                <h1 style={{
-                fontSize: 'clamp(30px, 5vw, 45px)',
-                fontFamily: 'cursive'
-                }} className="
-                text-black
-                row-start-2 col-span-full
-                md:col-start-1 md:row-start-2
-                text-2xl sm:text-2xl md:text-3xl lg:text-3xl xl:text-4xl
-                font-bold
-                text-center md:text-left
-                mb-6 sm:mb-8 md:mb-0
-                md:self-center
-                /* Cambio para md */
-                sm:row-start-2
-                sm:col-start-1
-                sm:mb[200px]
+                <h1
+                    style={{
+                        fontSize: "clamp(30px, 5vw, 45px)",
+                        fontFamily: "Arial, Helvetica, sans-serif", // 👈 Arial gratis y directo
+                    }}
+                    className="
+                            text-black
+                            font-bold
+                            tracking-[0.02em]
+                            leading-tight
+                            antialiased
+                            row-start-2 col-span-full
+                            md:col-start-1 md:row-start-2
+                            text-2xl sm:text-2xl md:text-3xl lg:text-3xl xl:text-4xl
+                            text-center md:text-left
+                            mb-6 sm:mb-8 md:mb-0
+                            md:self-center
+                            sm:row-start-2
+                            sm:col-start-1
+                            sm:mb[200px]
+                            lg:row-start-2
+                            lg:col-start-1
+                            lg:self-center
+                            xl:row-start-1
+                            xl:col-start-1
+                            xl:self-center
+                            xl:ml-[1vh]
+                        "
+                >
+                    ¡Reclama aquí tu beneficio exclusivo!
+                </h1>
 
-                /* Cambio para LG */
-                lg:row-start-2
-                lg:col-start-1
-                lg:self-center
-                /* Cambio para XL */
-                xl:row-start-1
-                xl:col-start-1
-                xl:self-center
-                xl:ml-[1vh]
-        ">
-                ¡Reclama aquí tu beneficio exclusivo!
-            </h1>
 
-            {/* PERSONAJE */}
-            <div className="
+                {/* PERSONAJE */}
+                <div className="
                     row-start-2 md:row-start-3 
                     col-span-full mt-[10vh]
                     flex justify-center md:justify-center 
@@ -135,8 +138,8 @@ export default function Home() {
                     xl:pt-0
                     xl:mr-[80vh]
                     ">
-                {/* Contenedor de la imagen con nuevos tamaños */}
-                <div className="
+                    {/* Contenedor de la imagen con nuevos tamaños */}
+                    <div className="
                         w-2/3 sm:w-1/2 md:w-1/2 
                         /* Tamaños ajustados para LG y XL */
                         lg:w-[300px] 
@@ -147,17 +150,17 @@ export default function Home() {
                         /* Alineación al fondo */
                         self-end
   ">
-                    <Image
-                        src="/Personaje-1 (1) (1).png"
-                        alt="Personaje"
-                        fill
-                        className="object-contain"
-                    />
-                    {/* Texto sobre imagen */}
-                    <h1 style={{
-                        fontSize: '40px',
-                    }}
-                        className="
+                        <Image
+                            src="/Personaje-1 (1) (1).png"
+                            alt="Personaje"
+                            fill
+                            className="object-contain"
+                        />
+                        {/* Texto sobre imagen */}
+                        <h1 style={{
+                            fontSize: '40px',
+                        }}
+                            className="
                         hidden /* Oculto por defecto en todos los tamaños */
                         md:block /* Visible a partir de md (768px) */
                         md:flex  /* Necesario para mantener el centrado flex */
@@ -179,13 +182,13 @@ export default function Home() {
 
           
                 ">
-                        Tu voucher te esta esperando
-                    </h1>
+                            Tu voucher te esta esperando
+                        </h1>
+                    </div>
                 </div>
-            </div>
 
-            {/* FORMULARIO  */}
-            <div className="
+                {/* FORMULARIO  */}
+                <div className="
                 row-start-3 md:row-start-2 
                 col-span-full md:col-span-2
                 flex justify-center items-center 
@@ -208,12 +211,12 @@ export default function Home() {
                 xl:col-start-2
                 xl:pt-20
 ">
-                <div className="w-full max-w-xs sm:max-w-sm md:max-w-md md:justify-center md:content-center xl:mr-10">
-                    <RegisterForm />
+                    <div className="w-full max-w-xs sm:max-w-sm md:max-w-md md:justify-center md:content-center xl:mr-10">
+                        <RegisterForm />
+                    </div>
                 </div>
-            </div>
 
-        </div>
+            </div>
         </main >
     )
 }

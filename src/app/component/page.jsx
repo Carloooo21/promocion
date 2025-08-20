@@ -39,8 +39,14 @@ const Toast = ({
   );
 };
 
+
+
 export default function RegisterForm() {
-  const [texto, setTexto] = useState('$510.000');
+
+
+  const [redeemed, setRedeemed] = useState(false);
+  const [animatePrice, setAnimatePrice] = useState(false);
+  const [texto, setTexto] = useState('$850.000');
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState('');
   const [toastType, setToastType] = useState('success');
@@ -53,8 +59,14 @@ export default function RegisterForm() {
   };
 
   const cambiarTexto = () => {
+    //if (redeemed) return; evita race conditions y múltiples showAlert por múltiples clicks rápidos.
+    if (redeemed) return;
+    setRedeemed(true);
     setTexto('0$');
-    showAlert(); // Muestra el mensaje por defecto
+    showAlert('¡Voucher canjeado! Nuestros asesores se comunicarán contigo.', 'success');
+    // Animación breve del precio : clase que dura 700ms
+    setAnimatePrice(true);
+    setTimeout(() => setAnimatePrice(false), 700);
   };
 
   const {
@@ -70,6 +82,25 @@ export default function RegisterForm() {
     handleSubmit
   } = useRegister("");
 
+
+  useEffect(() => {
+    const onKeyDown = (e) => {
+      //onKeyDown es una función local que recibirá el evento del teclado. e es el objeto del evento
+      if (e.key === 'Escape' && mostrarCard) {
+        //e.key === 'Escape' comprueba si la tecla pulsada es la tecla Escape. (Valor estándar de KeyboardEvent.key.)
+        //&& mostrarCard evita ejecutar handleCloseCard() cuando la tarjeta ya está cerrada. Es una micro-optimización para no llamar innecesariamente la función.
+        handleCloseCard();
+      }
+
+    }
+      ;
+    document.addEventListener('keydown', onKeyDown);
+    //Añade el listener global al document para escuchar cualquier tecla que se presione mientras la página esté activa.
+    return () => document.removeEventListener('keydown', onKeyDown)
+  }, [mostrarCard]
+    //useEffect es un hook de React que ejecuta la función que le pases después de que el componente se renderiza (o cuando cambian las dependencias).
+    // La dependencia es el array final [mostrarCard]. Esto significa: ejecuta el efecto la primera vez (mount) y cada vez que mostrarCard cambie. También ejecutará la función de limpieza antes de ejecutar el efecto de nuevo o cuando el componente se desmonte.
+  );
 
   // Estado para errores específicos por campo
   const [fieldErrors, setFieldErrors] = useState({
@@ -234,6 +265,7 @@ export default function RegisterForm() {
                 <span className="text-xs text-white-400 block mt-1">Ej: Galileo Galilei.</span>
               </label>
               <input
+                //En React controlar el valor con value enlazado al estado garantiza que la UI refleje siempre el estado (formData). resetForm() debe cambiar formData a valores vacíos y los inputs mostrarán esos valores vacíos.
                 value={formData.nombreUsuario}
                 type="text"
                 onChange={e => handleFielfChange('nombreUsuario', e.target.value)}
@@ -256,6 +288,7 @@ export default function RegisterForm() {
                 <span className="text-xs text-white-400 block mt-1">Ej: 3057095134</span>
               </label>
               <input
+                value={formData.numeroTelefono}
                 type="number"
                 onChange={e => handleFielfChange('numeroTelefono', e.target.value)}
                 required
@@ -276,6 +309,7 @@ export default function RegisterForm() {
                 <span className="text-xs text-white-400 block mt-1">Ej: Software.</span>
               </label>
               <input
+                value={formData.sectorIndustrial}
                 type="text"
                 onChange={e => handleFielfChange('sectorIndustrial', e.target.value)}
                 required
@@ -298,6 +332,7 @@ export default function RegisterForm() {
                 <span className="text-xs text-white-400 block mt-1">Ej: Desarrolador de software.</span>
               </label>
               <input
+                value={formData.cargoUsuario}
                 type="text"
                 onChange={e => handleFielfChange('cargoUsuario', e.target.value)}
                 required
@@ -318,6 +353,7 @@ export default function RegisterForm() {
                 <span className="text-xs text-white-400 block mt-1">Ej: astronomo@gmail.com</span>
               </label>
               <input
+                value={formData.correoUsuario}
                 type="text"
                 onChange={e => handleFielfChange('correoUsuario', e.target.value)}
                 required
@@ -338,6 +374,7 @@ export default function RegisterForm() {
                 <span className="text-xs text-white-400 block mt-1">Ej: Funza, cundinamarca</span>
               </label>
               <input
+                value={formData.lugarUsuario}
                 type="text"
                 onChange={e => handleFielfChange('lugarUsuario', e.target.value)}
                 required
@@ -358,6 +395,7 @@ export default function RegisterForm() {
                 <span className="text-xs text-white-400 block mt-1">Ej: DATASERVICIOS Y COMUNICACIONES S.A.S.</span>
               </label>
               <input
+                value={formData.nombreEmpresa}
                 type="text"
                 onChange={e => handleFielfChange('nombreEmpresa', e.target.value)}
                 required
@@ -467,7 +505,7 @@ export default function RegisterForm() {
 
             {/* Porcentaje */}
             <div className="my-2 text-center">
-              <span className="text-6xl font-extrabold tracking-tight text-[#ffffff] drop-shadow-lg">50%</span>
+              <span className="text-6xl font-extrabold tracking-tight text-[#ffffff] drop-shadow-lg">100%</span>
               <p className="text-xl font-semibold mt-1 text-gray-200">Descuento aplicado</p>
             </div>
 
@@ -485,14 +523,19 @@ export default function RegisterForm() {
             {/* Botón y precio */}
             <div className="flex justify-between items-center w-full mt-6">
               <button
-                className="px-5 py-2 bg-[#FF2301] text-white font-semibold rounded-lg hover:bg-[#ff8243] transition duration-200 w-[135px] h-[50px]"
+                className={`px-5 py-2 text-white font-semibold rounded-lg transition duration-200 w-[135px] h-[50px]
+                ${redeemed ? 'bg-gray-400 cursor-not-allowed opacity-70' : 'bg-[#FF2301] hover:bg-[#ff8243]'}`}
                 onClick={cambiarTexto}
+                disabled={redeemed}
               >
-                Canjear
+                {redeemed ? 'Canjeado' : 'Canjear'}
               </button>
+
               <div className="text-center">
                 <p className="text-sm text-gray-200">Precio final:</p>
-                <p className="text-xl font-bold text-white">{texto}</p>
+                <p className={`text-xl font-bold text-white transition-transform duration-300 ${animatePrice ? 'transform scale-105' : ''}`}>
+                  {texto}
+                </p>
               </div>
             </div>
 
