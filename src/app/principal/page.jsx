@@ -74,7 +74,7 @@ export default function Home() {
                 <h1
                     style={{
                         fontSize: "clamp(30px, 5vw, 45px)",
-                        fontFamily: "Arial, Helvetica, sans-serif", // 👈 Arial gratis y directo
+                        fontFamily: "Arial, Helvetica, sans-serif", 
                     }}
                     className="
                             text-black
