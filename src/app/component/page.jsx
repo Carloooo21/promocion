@@ -505,7 +505,7 @@ export default function RegisterForm() {
 
             {/* Porcentaje */}
             <div className="my-2 text-center">
-              <span className="text-6xl font-extrabold tracking-tight text-[#ffffff] drop-shadow-lg">100%</span>
+              <span className="text-6xl font-extrabold tracking-tight text-[#ffffff] drop-shadow-lg">50%</span>
               <p className="text-xl font-semibold mt-1 text-gray-200">Descuento aplicado</p>
             </div>
 
