@@ -378,7 +378,7 @@ export default function RegisterForm() {
               className="md:col-span-2">
               <label style={labelStyle}>Lugar de vivienda
                 <span className="text-red-500 ml-1">*</span>
-                <span className="text-xs text-white-400 block mt-1">Ej: Bogota, Cundinamarca</span>
+                <span className="text-xs text-white-400 block mt-1">Ej: Bogotá, Cundinamarca</span>
               </label>
               <input
                 value={formData.lugarUsuario}
